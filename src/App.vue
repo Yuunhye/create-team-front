@@ -1,26 +1,29 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <FirstModal v-if="isEnter == false" @enterRoom="enterRoom"></FirstModal>
+  <MakeTeamRoom v-else :userName="userName" :roomName="roomName"></MakeTeamRoom>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import { ref } from 'vue';
+import FirstModal from './components/FirstModal.vue'
+import MakeTeamRoom from './components/MakeTeamRoom.vue'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+const isEnter = ref(false);
+const userName = ref('');
+const roomName = ref('');
+const enterRoom = (data) => {
+  isEnter.value = true;
+  console.log(data)
+  userName.value = data.userName;
+  roomName.value = data.roomName;
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Freeman&display=swap');
+*{
+    font-family: "Do Hyeon", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 </style>
