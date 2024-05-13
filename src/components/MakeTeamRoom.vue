@@ -65,8 +65,7 @@ import { onBeforeMount } from 'vue';
 import axios from 'axios';
 import member from '../../public/member';
 
-const url = 'http://localhost:3000'
-
+const url = process.env.VUE_APP_SERVER_URI;
 const props = defineProps({
     userName:{
         type: String,
@@ -248,9 +247,8 @@ const changePage = () => {
     cursor: pointer;
 }
 .status{
-    flex-grow: 0; /* 가운데 요소의 크기 변화 없음 */
     width: 300px;
-    height: 100px;
+    height: 85px;
     justify-content: center;
     text-align: center;
     font-size: 30px;
@@ -271,25 +269,21 @@ p{
     display: flex;
 }
 .user-info{
-    width: 700px;
-    height: 100px;
+    width: 640px;
+    height: 95px;
     background-color: rgba(255, 255, 255, 0.267);
     display: flex;
     align-items: center;
-    margin-top: 13px;
-    margin-bottom: 10px;	
+    margin-top: 10px;
 }
 .auction{
-    width: 150px;
-    height: 100px;
+    width: 80px;
+    height: 95px;
     border: none;
     border-left: 12px solid;
     border-color: #3773ff87;
     background-color: rgba(255, 255, 255, 0.267);
-    /* border: solid;
-    border-color: #7A5C29; */
-    margin-top: 13px;
-    margin-bottom: 10px;
+    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -309,7 +303,7 @@ p{
 }
 .team{
     width: 200px;
-    height: 100px;
+    height: 95px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -336,7 +330,7 @@ p{
     display: flex;
     flex-direction: column;
     margin-left: auto;
-    margin-right: 35px;
+    margin-right: 20px;
 }
 .coin{
     width: 20px;
@@ -351,6 +345,7 @@ p{
 .teammember{
     margin-top: 12px;
     height: 20px;
+    width: 70px;
     display: flex;
     align-items: center;
 }
@@ -369,7 +364,7 @@ p{
 }
 .select{
     width: 50px;
-    height: 100px;
+    height: 95px;
     color: white;
     display: flex;
     align-items: center;

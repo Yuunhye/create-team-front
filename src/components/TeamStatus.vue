@@ -63,6 +63,7 @@ const getLeaderImg = (n) => {
 }
 .user-info{
     width: 1300px;
+    min-width: 800px;
     height: 100px;
     background-color: rgba(255, 255, 255, 0.267);
     display: flex;

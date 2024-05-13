@@ -134,8 +134,8 @@ const getTier = (num) => {
     margin-right: 100px;
 }
 .panel{
-    width: 500px;
-    height: 650px;  
+    width: 450px;
+    height: 580px;  
     background-color: rgba(0, 0, 0, 0.389);
     color: white;
 
@@ -146,8 +146,8 @@ const getTier = (num) => {
     display: flex;
     justify-content: center;
     align-content: center;
-    width: 400px;
-    height: 400px;
+    width: 350px;
+    height: 350px;
     /* border-radius: 50%; */
     
     mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0)100%); /* 중앙은 선명하게, 바깥쪽은 흐려지게 */
