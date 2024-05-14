@@ -13,7 +13,7 @@
                     <div class = "team">
                         <div v-for="(memberId, i) in teamMember[user]" :key="i" class="member-img">
                             <img :src="getMemberTierImg(memberId)">
-                            <p>{{ member[memberId][0] }}</p>
+                            <p>{{ members[memberId][0] }}</p>
                         </div>
                         
                     </div>
@@ -25,7 +25,6 @@
 <script setup>
 //import { defineEmits } from 'vue';
 import {defineProps} from 'vue';
-import member from '../../public/member';
 
 const props = defineProps({
     membersById :{
@@ -33,23 +32,19 @@ const props = defineProps({
     },
     teamMember : {
         type: Object,
+    },
+    members: {
+        type: Object
     }
 })
 
-console.log(props.membersById);
-
 const getMemberTierImg = (memberId) => {
-    return require(`../assets/tier/${member[memberId][1]}.png`);
+    return require(`../assets/tier/${props.members[memberId][1]}.png`);
 }
 const getLeaderImg = (n) => {
     return require(`../assets/random/r${n}.png`)
 }
-// const emit = defineEmits(["change"]);
 
-// const changePage = () => {
-//     emit('change');  
-
-// }
 </script>
 <style scoped>
 

@@ -6,8 +6,11 @@
                     <img class="champion-img" :src="getImageSrc(currentMember)">
                 </div>
                 <div class="info">
-                    <img class="tier" :src="getTier(currentMember)">
-                    <p>{{ memberInfo[currentMember][0] }}</p>
+                    <div class = "nickname">
+                        <img class="tier" :src="getTier(currentMember)">
+                        <p>{{ memberInfo[currentMember][0] }}</p>
+                    </div>
+                    
                     <img class="position" :src="getFirstPosition(currentMember)">
                     <img class="position" :src="getSecondPosition(currentMember)">
                 </div>
@@ -21,39 +24,69 @@
                 </div>
             </div>
         </div>
-        <div class = "btn">
-            <button class="admin complete" @click="completeAndNext">완료</button>
-            <button class="admin" @click="passAndNext">넘기기</button>
-            <!-- <div class = "button">완료</div>
-            <div class="button">넘기기</div> -->
-        </div>
     </div>
 </template>
 <script setup>
 
-import {ref} from 'vue';
-import member from '../../public/member';
+import {ref, defineProps, watch, defineEmits} from 'vue';
+// import member from '../../public/member';
+
+const emit = defineEmits(["select", "end"]);
+const props = defineProps({
+    selected:{
+        type: Boolean,
+        default: false
+    },
+    next : {
+        type: Boolean,
+        default: false
+    },
+    randomMembers : {
+        type: Object,
+        default : () => {return {}}
+    }
+
+})
 
 const currentMember = ref();
-const memberInfo = ref(member);
+const memberInfo = ref({});
+const restMember = ref([]);
+const randomKey = ref([]);
 
-
-const completeAndNext = () => {
-    if (currentMember.value != undefined){
-        memberInfo.value.splice(currentMember.value, 1);
-    } 
-    passAndNext();
-    
-}
-const passAndNext = () => {
-
-    if (memberInfo.value.length != 0){
-        const randomIndex = Math.floor(Math.random() * memberInfo.value.length);
-        currentMember.value = randomIndex;
-    } else{
-        currentMember.value = null;
+watch(() => props.selected, (newValue) => {
+    if (newValue == true) {
+        if(restMember.value.length != 0) {
+            restMember.value.pop();
+            emit("select", currentMember.value);
+        }
     }
-    
+})
+
+watch(() => props.randomMembers, (newValue) => {
+    memberInfo.value = newValue.members;
+    randomKey.value = newValue.randomKeys;
+    console.log(memberInfo.value, randomKey.value, newValue);
+})
+
+watch(() => props.next, () => {
+    passAndNext();
+})
+
+const passAndNext = () => {
+    if (randomKey.value.length != 0){
+        currentMember.value = randomKey.value.pop();
+        restMember.value.push(currentMember.value);
+    } else{
+        if (restMember.value.length == 0) {
+            currentMember.value = null;
+            emit("end");
+        }
+        else{
+            randomKey.value = restMember.value;
+            currentMember.value = randomKey.value.pop();
+            restMember.value = [currentMember.value];
+        }
+    }
 }
 const getImageSrc = (num) => {
     return require (`../assets/champ/${memberInfo.value[num][4]}.png`);
@@ -76,16 +109,15 @@ const getTier = (num) => {
 .panel-bg, .btn{
     display: flex;
     justify-content: flex-end;
-    margin-right: 150px;
+    align-items: center;
+    margin-right: 7vw;
 }
 .panel{
-    width: 400px;
-    height: 600px;  
-    margin-top: 80px;
-    background-color: #020b1494;
-    border-color: #614a1fd1;
-    border-width: 4px;
-    border-style:solid;
+    min-width: 450px;
+    width: 24vw;
+    min-height: 580px;  
+    height: 65vh;
+    background-color: rgba(0, 0, 0, 0.389);
     color: white;
 
 }
@@ -95,8 +127,14 @@ const getTier = (num) => {
     display: flex;
     justify-content: center;
     align-content: center;
-    width: 300px;
-    height: 300px;
+    min-width: 350px;
+    width: 20vw;
+    min-height: 350px;
+    height: 20vw;
+    /* border-radius: 50%; */
+    
+    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0)100%); /* 중앙은 선명하게, 바깥쪽은 흐려지게 */
+    /* clip-path: polygon(0 15%, 100% 15%, 100% 85%, 0 85%); */
     background-color: white;
     position: relative;
     overflow: hidden;
@@ -113,12 +151,12 @@ const getTier = (num) => {
 }
 .tier{
     margin-top: 10px;
-    width: 120px;
-    height: 90px;
+    width: 100px;
+    height: 80px;
     
 }
 .position{
-    width: 70px;
+    width: 50px;
 }
 .guess{
     margin: 0 auto;
@@ -128,12 +166,11 @@ const getTier = (num) => {
     align-content: center;
     font-size: 100px;
     color: #0593A7;
-    opacity: 0.6;
+
 }
 .info{
     margin: 0 auto;
     text-align: center;
-    opacity: 0.6;
 }
 
 .champion-img{
@@ -143,23 +180,16 @@ const getTier = (num) => {
     border-width: 2px;
     border-color: black;
 }
-.admin{
-    margin-top: 20px;
-    width: 195px;
-    height: 40px;
-    background-color: transparent;
-    background-color: rgba(0, 0, 0, 0.658);
-    color: #CDBE91;
-    border-style: solid;
-    border-width: 2px;
-    border-color: #614A1F;
-    cursor:pointer;
-    opacity: 0.8;
-}
-.admin:hover{
-    background-color:black;
-}
 .complete{
     margin-right: 17px;
+}
+.nickname{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.nickname p{
+    margin-left: 20px;
+    font-size: 30px;
 }
 </style>
