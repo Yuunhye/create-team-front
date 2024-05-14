@@ -17,7 +17,7 @@
                         <img class="user-img" :src="getLeaderImg(i)">
                         <img class="boss" src="../assets/boss.png"> 
                         <div class = "name">
-                            <p>{{ membersById[user].user_name }}</p>
+                            <p class = "user-name">{{ membersById[user].user_name }}</p>
                             <p v-if="user == userName" class = "me"> &nbsp; me</p>
                         </div>
                         <div class = "team">
@@ -269,12 +269,13 @@ p{
     display: flex;
 }
 .user-info{
-    width: 640px;
+    min-width: 640px;
+    width: 45vw;
     height: 95px;
     background-color: rgba(255, 255, 255, 0.267);
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 10px; 
 }
 .auction{
     width: 80px;
@@ -317,15 +318,18 @@ p{
     font-size: 30px;
     margin-left: 15px;
     color: white;
-    overflow: hidden;
     width: 180px;
     display: flex;
     align-items: center;
-    overflow: hidden;  		
-    text-overflow: ellipsis;  
     white-space: nowrap; 
+    overflow: hidden;  		
     margin-right: 10px;
 }
+.user-name{
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    overflow: hidden;   
+}   
 .info{
     display: flex;
     flex-direction: column;

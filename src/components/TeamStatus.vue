@@ -57,20 +57,21 @@ const getLeaderImg = (n) => {
     margin-right: 70px;
     margin-left: 70px;
     margin-top: 100px;
+    overflow-x: auto;
 }
 .user-div{
     display: flex;
 }
 .user-info{
-    width: 1300px;
-    min-width: 800px;
+    width: 70vw;
+    min-width: 1300px;
     height: 100px;
     background-color: rgba(255, 255, 255, 0.267);
     display: flex;
     align-items: center;
     margin: 0 auto;
     margin-top: 15px;
-    overflow: hidden;  		
+    overflow: hidden;
     text-overflow: ellipsis;  
     white-space: nowrap; 	
 }
