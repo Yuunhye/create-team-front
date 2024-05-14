@@ -15,7 +15,7 @@
                 <p>{{ seconds }}초</p>
             </div>
         </div>
-        <div v-if="change==false" class = "team-room">
+        <div v-show="change==false" class = "team-room">
             <div class = "user">
                 <div class = "user-div" v-for = "(user, i) in Object.keys(membersById)" :key="i">
                     <div class = "user-info">
@@ -47,8 +47,9 @@
                     </div>
                 </div>
             </div>
-            <RandomCard :selected="selected" :next="next" :randomMembers="randomMembers" @select="changeSelected" @end="stopTimer"></RandomCard>
-            <div v-if="userCnt == readyUserCnt && teamMember[userName] != 5" class = "chatting">
+            <RandomCard v-if="randomMembers['randomKeys'] != undefined" :selected="selected" :next="next" :members="randomMembers['members']" :randomKey="randomMembers['randomKeys']" @select="changeSelected" @end="stopTimer"></RandomCard>
+            <RandomCard v-else></RandomCard>
+            <div v-if="userCnt == readyUserCnt && getTeamMemberCnt() && countdown == 0" class = "chatting">
                 <div class = "chat-div">
                     <input type="text" v-model="numberInput" @input="validateInput" placeholder="값을 입력하세요" @keypress="handleKeyDown">
                     <div class="submit-icon" @click="submitMessage">
@@ -60,7 +61,7 @@
                 <p>Ready</p>
             </div>
         </div>
-        <TeamStatus :membersById="membersById" :teamMember="teamMember" @change="changePage" :members="randomMembers['members']" v-else>
+        <TeamStatus v-show="change==true" :membersById="membersById" :teamMember="teamMember" @change="changePage" :members="randomMembers['members']">
         </TeamStatus>
     </div>
 </template>
@@ -84,6 +85,7 @@ const props = defineProps({
     }
 })
 
+const change = ref(false);
 const max_num = ref(0);
 const messages = ref({});
 const membersById = ref({});
@@ -176,6 +178,14 @@ const getLeaderImg = (n) => {
     return require(`../assets/random/r${n}.png`)
 }
 
+const getTeamMemberCnt = () => {
+    if (teamMember.value[props.userName] == undefined || teamMember.value[props.userName].length <= 3){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 const handleKeyDown = (event) => {
   if (event.key === 'Enter' && event.shiftKey) {
     return;
@@ -188,22 +198,28 @@ const handleKeyDown = (event) => {
 
 //타이머 관련
 const startTimer = () => {
+    socket.emit('req_server_time');
+}
+
+socket.on("res_server_time", (serverTime) => {
+    const endTime = new Date(serverTime + 15 * 1000);
     timer.value = setInterval(() => {
-        if(seconds.value == 0){
+        const now = new Date();
+        seconds.value = Math.round((endTime - now) / 1000);
+        if (seconds.value <= 0){
+            stopTimer();
             if(max_num.value > 0){
                 const coin = membersById.value[selectedTeam.value].coin - max_num.value;
                 selected.value = true;
                 membersById.value[selectedTeam.value].coin = coin;
-                // socket.emit("successful_bid", props.roomName, selectedTeam.value, coin);
             } else{
                 next.value = !next.value;
             }
             seconds.value = 15;
-        }else{
-            seconds.value -= 1;
-        }
+            startTimer();
+        } 
     }, 1000);
-}
+})
 
 const stopTimer = () => {
     clearInterval(timer.value);
@@ -274,8 +290,6 @@ socket.on("user_disconnecting", (user_name) => {
     clearInterval(timer.value);
 })
 
-
-const change = ref(false);
 
 const changePage = () => {
     if (change.value == true) change.value = false;

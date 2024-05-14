@@ -8,7 +8,7 @@
                 <div class="info">
                     <div class = "nickname">
                         <img class="tier" :src="getTier(currentMember)">
-                        <p>{{ memberInfo[currentMember][0] }}</p>
+                        <p>{{ members[currentMember][0] }}</p>
                     </div>
                     
                     <img class="position" :src="getFirstPosition(currentMember)">
@@ -41,17 +41,18 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    randomMembers : {
-        type: Object,
-        default : () => {return {}}
+    members: {
+        type: Object
+    },
+    randomKey : {
+        type: Int32Array,
+        deafult: []
     }
 
 })
-
+const randomKey = ref(props.randomKey)
 const currentMember = ref();
-const memberInfo = ref({});
 const restMember = ref([]);
-const randomKey = ref([]);
 
 watch(() => props.selected, (newValue) => {
     if (newValue == true) {
@@ -61,18 +62,14 @@ watch(() => props.selected, (newValue) => {
         }
     }
 })
-
-watch(() => props.randomMembers, (newValue) => {
-    memberInfo.value = newValue.members;
-    randomKey.value = newValue.randomKeys;
-    console.log(memberInfo.value, randomKey.value, newValue);
-})
-
 watch(() => props.next, () => {
     passAndNext();
 })
 
+
+
 const passAndNext = () => {
+    console.log("passAndNext : ", randomKey.value);
     if (randomKey.value.length != 0){
         currentMember.value = randomKey.value.pop();
         restMember.value.push(currentMember.value);
@@ -89,17 +86,17 @@ const passAndNext = () => {
     }
 }
 const getImageSrc = (num) => {
-    return require (`../assets/champ/${memberInfo.value[num][4]}.png`);
+    return require (`../assets/champ/${props.members[num][4]}.png`);
 }
 
 const getFirstPosition = (num) => {
-    return require(`../assets/position/${memberInfo.value[num][2]}.png`)
+    return require(`../assets/position/${props.members[num][2]}.png`)
 }
 const getSecondPosition = (num) => {
-    return require(`../assets/position/${memberInfo.value[num][3]}.png`)
+    return require(`../assets/position/${props.members[num][3]}.png`)
 }
 const getTier = (num) => {
-    return require(`../assets/tier/${memberInfo.value[num][1]}.png`)
+    return require(`../assets/tier/${props.members[num][1]}.png`)
 }
 </script>
 <style scoped>

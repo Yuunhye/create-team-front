@@ -15,7 +15,6 @@
                             <img :src="getMemberTierImg(memberId)">
                             <p>{{ members[memberId][0] }}</p>
                         </div>
-                        
                     </div>
                 </div>
             </div>
