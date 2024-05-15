@@ -172,6 +172,8 @@ socket.on("get_message", (name, message) => {
     max_num.value = Number(message);
     selectedTeam.value = name;
     messages.value[name] = Number(message);
+    stopTimer();
+    startTimer();
 })
 
 const getLeaderImg = (n) => {
@@ -202,7 +204,7 @@ const startTimer = () => {
 }
 
 socket.on("res_server_time", (serverTime) => {
-    const endTime = new Date(serverTime + 15 * 1000);
+    const endTime = new Date(serverTime + 10 * 1000);
     timer.value = setInterval(() => {
         const now = new Date();
         seconds.value = Math.round((endTime - now) / 1000);
