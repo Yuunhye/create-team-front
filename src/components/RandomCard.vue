@@ -24,12 +24,15 @@
                 </div>
             </div>
         </div>
+        <div v-if="currentMember != undefined" class = "member-cnt">
+            <p>{{outMemberCnt}}/{{ memberCnt }}</p>
+        </div>
     </div>
 </template>
 <script setup>
 
 import {ref, defineProps, watch, defineEmits} from 'vue';
-// import member from '../../public/member';
+import Deque from '../class/Deque';
 
 const emit = defineEmits(["select", "end"]);
 const props = defineProps({
@@ -52,12 +55,19 @@ const props = defineProps({
 })
 const randomKey = ref(props.randomKey)
 const currentMember = ref();
-const restMember = ref([]);
+const memberCnt = ref(props.randomKey ? props.randomKey.length : 0);
+const outMemberCnt = ref(1);
+const deque = new Deque();
+
+for (const key in randomKey.value){
+    deque.append(key);
+}
 
 watch(() => props.selected, (newValue) => {
     if (newValue == true) {
-        if(restMember.value.length != 0) {
-            restMember.value.pop();
+        if (currentMember.value != null){
+            deque.popleft();
+            outMemberCnt.value ++;
             emit("select", currentMember.value);
         }
     }
@@ -66,23 +76,13 @@ watch(() => props.next, () => {
     passAndNext();
 })
 
-
-
 const passAndNext = () => {
-    console.log("passAndNext : ", randomKey.value);
-    if (randomKey.value.length != 0){
-        currentMember.value = randomKey.value.pop();
-        restMember.value.push(currentMember.value);
+    currentMember.value = deque.pop();
+    console.log(currentMember.value);
+    if (currentMember.value == null){
+        emit("end");
     } else{
-        if (restMember.value.length == 0) {
-            currentMember.value = null;
-            emit("end");
-        }
-        else{
-            randomKey.value = restMember.value;
-            currentMember.value = randomKey.value.pop();
-            restMember.value = [currentMember.value];
-        }
+        deque.appendleft(currentMember.value);
     }
 }
 const getImageSrc = (num) => {
@@ -188,5 +188,12 @@ const getTier = (num) => {
 .nickname p{
     margin-left: 20px;
     font-size: 30px;
+}
+.member-cnt{
+    color: white;
+    font-size: 20px;
+    width: 24vw;
+    min-width: 450px;
+    text-align: center;
 }
 </style>
