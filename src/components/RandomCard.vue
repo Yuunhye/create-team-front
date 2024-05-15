@@ -53,13 +53,13 @@ const props = defineProps({
     }
 
 })
-const randomKey = ref(props.randomKey)
+const randomKey = ref(props.randomKey ? props.randomKey : [])
 const currentMember = ref();
 const memberCnt = ref(props.randomKey ? props.randomKey.length : 0);
 const outMemberCnt = ref(1);
 const deque = new Deque();
 
-for (const key in randomKey.value){
+for (const key of randomKey.value){
     deque.append(key);
 }
 
