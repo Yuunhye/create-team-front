@@ -53,6 +53,9 @@ const getLeaderImg = (n) => {
     margin-top: 100px;
     overflow-x: auto;
 }
+.user::-webkit-scrollbar {
+  display: none;
+}
 .user-div{
     display: flex;
 }

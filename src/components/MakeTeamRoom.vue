@@ -352,6 +352,9 @@ p{
     overflow: scroll;
     max-height: 65vh;
 }
+.user::-webkit-scrollbar {
+  display: none;
+}
 .user-div{
     display: flex;
 }
